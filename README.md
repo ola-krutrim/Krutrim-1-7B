@@ -160,6 +160,12 @@ response = tokenizer.decode(outputs[0])
 print(response)
 ```
 
+For batch inference, do:
+```
+python inference/batch_inference.py 
+```
+
+
 ## Limitations
 The model was trained on a dataset that includes content from the internet, which may contain toxic language, biases, and unsafe content. As a result, the model may:
 - Amplify biases present in the training data
