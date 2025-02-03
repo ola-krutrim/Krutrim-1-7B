@@ -101,7 +101,7 @@ pip install -r requirements.txt
 ```
 
 To use the base model, you can load it with `AutoModelForCausalLM` as follows:
-```
+```python
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -124,6 +124,42 @@ outputs = model.generate(
 response = tokenizer.decode(outputs[0])
 print(response)
 ```
+
+`Krutrim-1-instruct` model requires application of custom chat template.
+
+```python
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model_id = "krutrim-ai-labs/Krutrim-1-instruct"
+# Load model and tokenizer
+model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.bfloat16, trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+# Apply Chat Template
+chat_template ="{% for message in messages %}{% if message['role'] == 'system' %}{{ '<|SYSTEM|> ' + message['content'] + '\n' }}{% elif message['role'] == 'user' %}{{ '<|USER|> ' + message['content'] + '\n' }}{% elif message['role'] == 'assistant' %}{% if not loop.last %}{{ '<|RESPONSE|>\n'  + message['content'] + eos_token + '\n' }}{% else %}{{ '<|RESPONSE|>\n'  + message['content'] + eos_token }}{% endif %}{% endif %}{% if loop.last and add_generation_prompt %}{{ '<|RESPONSE|>\n' }}{% endif %}{% endfor %}"
+tokenizer.chat_template = chat_template
+
+prompt_dict = [
+
+    {"role": "system", "content": "You are an AI assistant."},
+    {"role": "user", "content": "Who are you?"}
+]
+
+prompts = tokenizer.apply_chat_template(prompt_dict, add_generation_prompt=True, tokenize=False)
+inputs = tokenizer(prompts, return_tensors='pt').to(device)
+inputs.pop("token_type_ids", None)
+
+# Generate response
+outputs = model.generate(
+    **inputs,
+    max_length=100
+)
+
+response = tokenizer.decode(outputs[0])
+print(response)
+```
+
 ## Limitations
 The model was trained on a dataset that includes content from the internet, which may contain toxic language, biases, and unsafe content. As a result, the model may:
 - Amplify biases present in the training data
