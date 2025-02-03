@@ -40,7 +40,7 @@ Krutrim Large Language Model (LLM) is a 2 trillion token multilingual foundation
 
 ### English Comparison between Krutrim-1 and Llama2Chat (Benchmarks run on `llm_foundry`)
 
-| Task               | Llama2Chat | KrutrimLLM |
+| Task               | Llama2Chat-7B | Krutrim-1-7B |
 |--------------------|--------------|------------|
 | arc               | 0.517        | **0.557**  |
 | bigbench          | **0.359**    | 0.330      |
@@ -66,28 +66,28 @@ Krutrim Large Language Model (LLM) is a 2 trillion token multilingual foundation
 | Model            | bn   | gu   | hi   | kn   | ml   | mr   | ta   | te   |
 |------------------|------|------|------|------|------|------|------|------|
 | **IndicCOPA**    |      |      |      |      |      |      |      |      |
-| Krutrim-1        | 0.89 | 0.83 | 0.86 | 0.88 | 0.88 | 0.87 | 0.89 | 0.89 |
+| Krutrim-1-7B        | 0.89 | 0.83 | 0.86 | 0.88 | 0.88 | 0.87 | 0.89 | 0.89 |
 | GPT-3.5          | 0.77 | 0.73 | 0.77 | 0.74 | 0.75 | 0.70 | 0.72 | 0.75 |
 | Airawata         | -    | -    | 0.74 | -    | -    | -    | -    | -    |
 | Kan-LLaMA        | -    | -    | -    | 0.74 | -    | -    | -    | -    |
 | Tam-LLaMA        | -    | -    | -    | -    | -    | -    | 0.77 | -    |
 | **IndicQA**      |      |      |      |      |      |      |      |      |
-| Krutrim-1        | 0.65 | 0.64 | 0.64 | 0.60 | 0.66 | 0.58 | 0.75 | 0.83 |
+| Krutrim-1-7B        | 0.65 | 0.64 | 0.64 | 0.60 | 0.66 | 0.58 | 0.75 | 0.83 |
 | Airawata         | -    | -    | 0.62 | -    | -    | -    | -    | -    |
 | Kan-LLaMA        | -    | -    | -    | 0.52 | -    | -    | -    | -    |
 | Tam-LLaMA        | -    | -    | -    | -    | -    | -    | 0.35 | -    |
 | **IndicSentiment**|      |      |      |      |      |      |      |      |
-| Krutrim-1        | 0.95 | 0.96 | 0.96 | 0.95 | 0.96 | 0.97 | 0.94 | 0.95 |
+| Krutrim-1-7B       | 0.95 | 0.96 | 0.96 | 0.95 | 0.96 | 0.97 | 0.94 | 0.95 |
 | GPT-3.5          | 0.50 | 0.81 | 0.96 | 0.60 | 0.75 | 0.88 | 0.51 | 0.53 |
 | Airawata         | -    | -    | 0.84 | -    | -    | -    | -    | -    |
 | Kan-LLaMA        | -    | -    | -    | 0.85 | -    | -    | -    | -    |
 | Tam-LLaMA        | -    | -    | -    | -    | -    | -    | 0.78 | -    |
 | **IndicTranslation**|   |      |      |      |      |      |      |      |
-| Krutrim-1        | 0.88 | 0.89 | 0.95 | 0.88 | 0.89 | 0.92 | -    | 0.88 |
+| Krutrim-1-7B        | 0.88 | 0.89 | 0.95 | 0.88 | 0.89 | 0.92 | -    | 0.88 |
 | Airawata         | -    | -    | 0.94 | -    | -    | -    | -    | -    |
 | Kan-LLaMA        | -    | -    | -    | 0.59 | -    | -    | -    | -    |
 | **IndicXParaphrase**|  |      |      |      |      |      |      |      |
-| Krutrim-1        | 0.91 | -    | 0.97 | 0.82 | 0.90 | 0.94 | -    | 0.61 |
+| Krutrim-1-7B       | 0.91 | -    | 0.97 | 0.82 | 0.90 | 0.94 | -    | 0.61 |
 | Airawata         | -    | -    | 0.60 | -    | -    | -    | -    | -    |
 | Kan-LLaMA        | -    | -    | -    | 0.59 | -    | -    | -    | -    |
 
@@ -95,55 +95,35 @@ Krutrim Large Language Model (LLM) is a 2 trillion token multilingual foundation
 
 To run this model, do this:
 ```
-git clone github.com/ola-krutrim/Krutrim-1-7B.git
+git clone https://github.com/ola-krutrim/Krutrim-1-7B.git
 cd Krutrim-1-7B
 pip install -r requirements.txt
 ```
 
-To test the base model, you can run
+To use the base model, you can load it with `AutoModelForCausalLM` as follows:
 ```
-python inference/inference.py
-```
-
-To test batch inference of instruct model, you can run
-```
-python inference/batch_inference.py
-```
-
-To use the instruct model, you can load it with `AutoModelForCausalLM` as follows:
-
-```python
-from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
-model_id = "krutrim-ai-labs/Krutrim-2-instruct"
-
+model_id = "krutrim-ai-labs/Krutrim-1-base"
 # Load model and tokenizer
-model = AutoModelForCausalLM.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.bfloat16, trust_remote_code=True)
 tokenizer = AutoTokenizer.from_pretrained(model_id)
-```
 
-To generate, first format the prompt in OpenAI Chat Message Format and apply chat template. 
-```python
+prompt = "Hello"
 
-prompt_dict = [
-    {"role":'system','content':"You are an AI assistant."},
-    {"role":'user','content':"Who are you?"}
-]
-prompt = tokenizer.apply_chat_template(prompt_dict, add_generation_prompt=True, tokenize=False)
 inputs = tokenizer(prompt, return_tensors='pt')
 inputs.pop("token_type_ids", None)
 
 # Generate response
-# Generate response
 outputs = model.generate(
     **inputs,
-    max_length=100
+    max_length=5
 )
 
 response = tokenizer.decode(outputs[0])
+print(response)
 ```
-
 ## Limitations
 The model was trained on a dataset that includes content from the internet, which may contain toxic language, biases, and unsafe content. As a result, the model may:
 - Amplify biases present in the training data
