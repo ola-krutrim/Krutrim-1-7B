@@ -19,7 +19,6 @@ Krutrim Large Language Model (LLM) is a 2 trillion token multilingual foundation
 
 | Model Name | Release Date |Release Note | Reference|
 |------------|-------------|-------------|-------------|
-| Krutrim-1-Base   | 2024-01-31  | Trained from scratch | [Here](https://huggingface.co/krutrim-ai-labs/Krutrim-1-base)
 | Krutrim-1-Instruct  | 2024-01-31 | SFT on Krutrim-1-Base |[Here](https://huggingface.co/krutrim-ai-labs/Krutrim-1-instruct)
 
 
@@ -38,7 +37,7 @@ Krutrim Large Language Model (LLM) is a 2 trillion token multilingual foundation
 
 ## Evaluation Results
 
-### English Comparison between Krutrim-1 and Llama2Chat (Benchmarks run on `llm_foundry`)
+### English Comparison between Llama2Chat-7B and Krutrim-1-7B
 
 | Task               | Llama2Chat-7B | Krutrim-1-7B |
 |--------------------|--------------|------------|
@@ -100,31 +99,6 @@ cd Krutrim-1-7B
 pip install -r requirements.txt
 ```
 
-To use the base model, you can load it with `AutoModelForCausalLM` as follows:
-```python
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
-model_id = "krutrim-ai-labs/Krutrim-1-base"
-# Load model and tokenizer
-model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.bfloat16, trust_remote_code=True)
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-
-prompt = "Hello"
-
-inputs = tokenizer(prompt, return_tensors='pt')
-inputs.pop("token_type_ids", None)
-
-# Generate response
-outputs = model.generate(
-    **inputs,
-    max_length=5
-)
-
-response = tokenizer.decode(outputs[0])
-print(response)
-```
-
 `Krutrim-1-instruct` model requires application of custom chat template.
 
 ```python
@@ -141,7 +115,6 @@ chat_template ="{% for message in messages %}{% if message['role'] == 'system' %
 tokenizer.chat_template = chat_template
 
 prompt_dict = [
-
     {"role": "system", "content": "You are an AI assistant."},
     {"role": "user", "content": "Who are you?"}
 ]
@@ -173,13 +146,15 @@ The model was trained on a dataset that includes content from the internet, whic
 - Provide inaccurate, incomplete, or redundant answers
 - Generate responses in languages inconsistent with the prompt
 
-## License
-TBD
+
 
 ## Ethical Considerations
 - The model may produce biased or offensive outputs based on its training data.
 - Users should apply human oversight when using the model for decision-making in sensitive areas.
 - While safeguards have been implemented, the model may still generate socially undesirable text in certain contexts.
+
+## License
+TBD
 
 ## Contact
 TBD
