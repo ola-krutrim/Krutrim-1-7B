@@ -158,8 +158,8 @@ The model was trained on a dataset that includes content from the internet, whic
 Developers can integrate the model into their applications via the model API available on [Krutrim cloud](https://cloud.olakrutrim.com/console/home).
 
 ## License
-[Krutrim Community License](./LICENSE)
+This code repository and the model weights are licensed under the [Krutrim Community License.](LICENSE.md)
 
 ## Contact
-TBD
+Contributions are welcome! If you have any improvements or suggestions, feel free to submit a pull request on GitHub.
 
