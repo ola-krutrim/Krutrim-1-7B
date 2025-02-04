@@ -153,8 +153,11 @@ The model was trained on a dataset that includes content from the internet, whic
 - Users should apply human oversight when using the model for decision-making in sensitive areas.
 - While safeguards have been implemented, the model may still generate socially undesirable text in certain contexts.
 
+## API Integration
+Developers can integrate the model into their applications via the model API available on [Krutrim cloud](https://cloud.olakrutrim.com/console/home).
+
 ## License
-TBD
+[Krutrim Community License](./LICENSE)
 
 ## Contact
 TBD
