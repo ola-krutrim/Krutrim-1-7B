@@ -7,7 +7,7 @@ Krutrim Large Language Model (LLM) is a 2 trillion token multilingual foundation
 - 7B parameter dense transformer model comparable similarly sized LLama-2 model;
 - Natively multilingual delivering best-in-class performance for a 7B mdoel on Indic benchmarks;
 - Exceeds performance of similar sized models on multilingual Indic generation tasks including creative writing, summarization, and translation;
-- Available in instruction-tuned versions
+- Available in instruction-tuned version
 
 ## Model Developer
 - OLA Krutrim Team
@@ -19,6 +19,7 @@ Krutrim Large Language Model (LLM) is a 2 trillion token multilingual foundation
 
 | Model Name | Release Date |Release Note | Reference|
 |------------|-------------|-------------|-------------|
+| Krutrim-1-Base  | 2024-01-31 | Trained from scratch |
 | Krutrim-1-Instruct  | 2024-01-31 | SFT on Krutrim-1-Base |[Here](https://huggingface.co/krutrim-ai-labs/Krutrim-1-instruct)
 
 
